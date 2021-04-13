@@ -1,0 +1,145 @@
+import pickle
+from tkinter import *
+root = Tk()
+root.geometry('500x550')
+root.title("XYZ Bank")
+model = pickle.load(open('chinmay_model.pkl', 'rb'))
+# bg = PhotoImage(file="Capture.PNG")
+# img = Label(root, image=bg)
+# img.pack()
+
+
+
+CreditScore = IntVar()
+Age = IntVar()
+Tenure = IntVar()
+Account_Balance = DoubleVar()
+Products = IntVar()
+Credit_Card = IntVar()
+ActiveMember = IntVar()
+Salary = DoubleVar()
+c = StringVar()
+Gender = IntVar()
+
+
+def database():
+    creditscore = CreditScore.get()
+    age = Age.get()
+    tenure = Tenure.get()
+    balance = Account_Balance.get()
+    products = Products.get()
+    credit_card = Credit_Card.get()
+    salary = Salary.get()
+    active_member = ActiveMember.get()
+    country = c.get()
+    gender = Gender.get()
+
+    if (country == 'Germany'):
+        Geography_Germany = 1
+        Geography_Spain = 0
+        Geography_France = 0
+
+    elif (country == 'Spain'):
+        Geography_Germany = 0
+        Geography_Spain = 1
+        Geography_France = 0
+
+    else:
+        Geography_Germany = 0
+        Geography_Spain = 0
+        Geography_France = 1
+
+    if (gender == 1):
+        Gender_Male = 1
+        Gender_Female = 0
+    else:
+        Gender_Male = 0
+        Gender_Female = 1
+    import tkinter
+    import tkinter.messagebox
+
+
+    prediction = model.predict([[creditscore,age,tenure,balance,products,credit_card,active_member,salary,Geography_Germany,Geography_Spain,Gender_Male]])
+    print(creditscore,age,tenure,balance,products,credit_card,active_member,salary,Geography_Germany,Geography_Spain,Gender_Male)
+    print(prediction)
+    if prediction == 1:
+
+        label = Label(root, text="Probability of customer leaving is HIGH!!", width=35, font=("bold", 20))
+        label.config(bg="red")
+
+        label.place(x=20, y=500)
+
+        # tkinter.messagebox.showwarning("Prediction", "Probability of customer leaving is HIGH!!")
+    else:
+        label = Label(root, text="Probability of customer leaving is LOW", width=35, font=("bold", 20))
+        label.config(bg="Green")
+        label.place(x=20, y=500)
+        # tkinter.messagebox.showinfo("Prediction", "Probability of customer leaving is LOW!!")
+
+
+
+label_0 = Label(root, text="Customer Attrition Analysis", width=22, font=("bold", 20))
+label_0.place(x=90, y=53)
+
+label_1 = Label(root, text="Credit Score", width=10, font=("bold", 11))
+label_1.place(x=30, y=130)
+entry_1 = Entry(root, textvar=CreditScore)
+entry_1.place(x=30, y=150)
+
+label_2 = Label(root, text="Age", width=9, font=("bold", 11))
+label_2.place(x=10, y=180)
+entry_2 = Entry(root, textvar=Age)
+entry_2.place(x=30, y=200)
+
+label_Tenure = Label(root, text="Tenure", width=10, font=("bold", 11))
+label_Tenure.place(x=15, y=230)
+entry_Tenure = Entry(root, textvar=Tenure)
+entry_Tenure.place(x=30, y=250)
+
+l_Account_Balance = Label(root, text="Account Balance", width=18, font=("bold", 11))
+l_Account_Balance.place(x=5, y=290)
+entry_bal = Entry(root, textvar=Account_Balance)
+entry_bal.place(x=30, y=320)
+
+l_Products = Label(root, text="Number Of Products", width=20, font=("bold", 11))
+l_Products.place(x=5, y=350)
+entry_Products = Entry(root, textvar=Products)
+entry_Products.place(x=30, y=380)
+
+l_Credit_Card = Label(root, text="Credit Card", width=15, font=("bold", 11))
+l_Credit_Card.place(x=320, y=130)
+Radiobutton(root, text="Yes", padx=25, variable=Credit_Card, value=1).place(x=305, y=150)
+Radiobutton(root, text="No", padx=40, variable=Credit_Card, value=0).place(x=375, y=150)
+
+l_ActiveMember = Label(root, text="Active Member", width=15, font=("bold", 11))
+l_ActiveMember.place(x=320, y=190)
+Radiobutton(root, text="Yes", padx=25, variable=ActiveMember, value=1).place(x=305, y=210)
+Radiobutton(root, text="No", padx=40, variable=ActiveMember, value=0).place(x=375, y=210)
+
+l_Salary = Label(root, text="Salary", width=12, font=("bold", 11))
+l_Salary.place(x=300, y=240)
+entry_Salary = Entry(root, textvar=Salary)
+entry_Salary.place(x=335, y=265)
+
+label_4 = Label(root, text="Geography", width=15, font=("bold", 11))
+label_4.place(x=300, y=295)
+list1 = ['Spain', 'Germany', 'France']
+droplist = OptionMenu(root, c, *list1)
+droplist.config(width=25)
+c.set("select customer's country")
+droplist.place(x=330, y=320)
+
+label_Gender = Label(root, text="Gender", width=15, font=("bold", 11))
+label_Gender.place(x=300, y=360)
+Radiobutton(root, text="Male", padx=25, variable=Gender, value=1).place(x=305, y=380)
+Radiobutton(root, text="Female", padx=40, variable=Gender, value=0).place(x=380, y=380)
+
+# Credit_Card = Label(root, text="Credit Card", width=14, font=("bold", 11))
+# Credit_Card.place(x=300, y=360)
+# entry_Credit_Card = Entry(root, textvar=Credit_Card)
+# entry_Credit_Card.place(x=320, y=380)
+
+
+Button(root, text='Submit', width=20, bg='brown', fg='white', command=database).place(x=180, y=450)
+
+root.mainloop()
